@@ -1,0 +1,128 @@
+<script type="text/x-red" data-template-name="bigquery query">
+    <div class="form-row">
+        <label for="node-input-bigquery"><i class="fa fa-database"></i> BigQuery</label>
+        <input type="text" id="node-input-bigquery">
+    </div>
+    <div class="form-row">
+        <label for="node-input-query"><i class="fa fa-search"></i> Query</label>
+        <input type="text" id="node-input-query" placeholder="query">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="bigquery query">
+    <p>BigQuery query node. Query data in BigQuery. The query statement(currently BigQuery only supports SELECT statement) must be specified in the node property. If the query succeeded, the results are returned in <code>msg.payload</code>. Currently, this node supports only single statement.
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('bigquery query',{
+        category: 'storage-input',
+        color:"#3169F5",
+        defaults: {
+            bigquery: {type:"bigquery-config",required:true},
+            query: {required:true},
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "db.png",
+        label: function() {
+            return this.name||(this.query ? this.query : "bigquery");
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bigquery insert">
+    <div class="form-row">
+        <label for="node-input-bigquery"><i class="fa fa-database"></i> BigQuery</label>
+        <input type="text" id="node-input-bigquery">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dataset"><i class="fa fa-folder"></i> Dataset</label>
+        <input type="text" id="node-input-dataset" placeholder="dataset name">
+    </div>
+    <div class="form-row node-input-table">
+         <label for="node-input-table"><i class="fa fa-file"></i> Table</label>
+         <input type="text" id="node-input-table" placeholder="table name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="bigquery insert">
+    <p>BigQuery insert node. Insert mutiple data into BigQuery table. The dataset name and the table name must be specified in <b>the node property</b>. The insert data is taken from <code>msg.payload</code> which supports both single data or multiple data.</p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('bigquery insert',{
+        category: 'storage-output',
+        color:"#3169F5",
+        defaults: {
+            bigquery: {type:"bigquery-config",required:true},
+            dataset: {required:true},
+            table: {required:true},
+            name: {value:""},
+        },
+        inputs:1,
+        outputs:0,
+        icon: "db.png",
+        align: "right",
+        label: function() {
+            return this.name||(this.dataset ? this.dataset : "bigquery");
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bigquery-config">
+    <div class="form-row">
+        <label for="node-config-input-projectId"><i class="fa fa-folder-o"></i> Project ID</label>
+        <input class="input-append-left" type="text" id="node-config-input-projectId" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-client_id"><i class="fa fa-user"></i> Client ID</label>
+        <input class="input-append-left" type="text" id="node-config-input-client_id" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-client_email"><i class="fa fa-envelope-o"></i> Client Email</label>
+        <input class="input-append-left" type="text" id="node-config-input-client_email" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-type"><i class="fa fa-file-text-o"></i> Type</label>
+        <input class="input-append-left" type="text" id="node-config-input-type" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-private_key_id"><i class="fa fa-key"></i> Private Key ID</label>
+        <input class="input-append-left" type="text" id="node-config-input-private_key_id" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-private_key"><i class="fa fa-key"></i> Private Key</label>
+        <input class="input-append-left" type="password" id="node-config-input-private_key" />
+    </div>
+    <div class="form-tips">
+      <p>To obtain these credentials, sign up to <a href="https://cloud.google.com/">Google Cloud Platform</a>, Then</p>
+      <ul>
+        <li>Go to IAM & Admin page and create a new service account with a new private key(JSON Key type)</li>
+        <li>Download a JSON file and copy the contents here</li>
+    </div>
+</script>
+<script type="text/javascript">
+(function() {
+    RED.nodes.registerType('bigquery-config',{
+        category: 'config',
+        defaults: { },
+        credentials: {
+            private_key_id: {type:"text",required:true},
+            private_key: {type: "password",required:true},
+            client_email: {type:"text",required:true},
+            client_id: {type:"text",required:true},
+            type: {type:"text",required:true},
+            projectId: {type:"text",required:true},
+        },
+        label: function() {
+            return this.private_key_id ? "BigQuery "+this.private_key_id : "BigQuery";
+        },
+        exportable: false,
+    });
+})();
+</script>
