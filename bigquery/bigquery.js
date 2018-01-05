@@ -4,34 +4,20 @@ module.exports = function (RED) {
     function BigQueryNode(n) {
         RED.nodes.createNode(this, n);
         if (this.credentials
-                && this.credentials.private_key_id
-                && this.credentials.private_key
-                && this.credentials.client_email
-                && this.credentials.client_id
-                && this.credentials.type
+                && this.credentials.keyFile
                 && this.credentials.projectId) {
 
-            this.gcloud = require('gcloud');
-            this.bigquery = this.gcloud.bigquery({
+            var BigQuery = require('@google-cloud/bigquery');
+            this.bigquery = new BigQuery({
                 projectId: this.credentials.projectId,
-                credentials: {
-                    "private_key_id": this.credentials.private_key_id,
-                    "private_key": this.credentials.private_key.replace(/\\n/g, "\n"),
-                    "client_email": this.credentials.client_email,
-                    "client_id": this.credentials.client_id,
-                    "type": this.credentials.type
-                }
+                keyFilename: this.credentials.keyFile
             });
         }
     }
 
     RED.nodes.registerType("bigquery-config", BigQueryNode, {
         credentials: {
-            private_key_id: { type: "text" },
-            private_key: { type: "password" },
-            client_email: { type: "text" },
-            client_id: { type: "text" },
-            type: { type: "text" },
+            keyFile: { type: "text" },
             projectId: { type: "text" }
         }
     });
@@ -50,7 +36,7 @@ module.exports = function (RED) {
             node.status({ fill: "blue", shape: "dot", text: "gcp.status.querying" });
             bigquery.query(node.query, function (err, rows) {
                 if (err) {
-                    node.error("gcp.error.query-failed", msg);
+                    node.error("gcp.error.query-failed: " + JSON.stringify(err));
                 }
                 msg.payload = rows;
                 node.status({});
@@ -81,13 +67,9 @@ module.exports = function (RED) {
                 table = dataset.table(node.table),
                 insert_data = JSON.parse(msg.payload);
 
-            table.insert(insert_data, function (err, insertErrors) {
+            table.insert(insert_data, function (err, apiResponse) {
                 if (err) {
-                    node.error("gcp.error.general-error", msg);
-                    return;
-                }
-                if (insertErrors.length > 0) {
-                    node.error("gcp.error.insert-error", msg);
+                    node.error("gcp.error.general-error: " + JSON.stringify(err));
                     return;
                 }
             });
