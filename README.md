@@ -16,10 +16,10 @@ Although Google Cloud Platform provides several ways to authenticate requests, t
 Usage
 -----
 
-###BigQuery Query Node
+### BigQuery Query Node
 
 BigQuery query node. Query data in BigQuery. The query statement(currently BigQuery only supports SELECT statement) must be specified in the node property. If the query succeeded, the results are returned in `msg.payload`. Currently, this node supports only single statement.
 
-###BigQuery Insert Node
+### BigQuery Insert Node
 
 BigQuery insert node. Insert mutiple data into BigQuery table. The dataset name and the table name must be specified in **the node property**. The insert data is taken from `msg.payload` which supports both single data or multiple data.<
