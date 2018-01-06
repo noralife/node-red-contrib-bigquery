@@ -80,30 +80,14 @@
         <input class="input-append-left" type="text" id="node-config-input-projectId" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-client_id"><i class="fa fa-user"></i> Client ID</label>
-        <input class="input-append-left" type="text" id="node-config-input-client_id" />
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-client_email"><i class="fa fa-envelope-o"></i> Client Email</label>
-        <input class="input-append-left" type="text" id="node-config-input-client_email" />
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-type"><i class="fa fa-file-text-o"></i> Type</label>
-        <input class="input-append-left" type="text" id="node-config-input-type" />
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-private_key_id"><i class="fa fa-key"></i> Private Key ID</label>
-        <input class="input-append-left" type="text" id="node-config-input-private_key_id" />
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-private_key"><i class="fa fa-key"></i> Private Key</label>
-        <input class="input-append-left" type="password" id="node-config-input-private_key" />
+        <label for="node-config-input-keyFile"><i class="fa fa-key"></i> Key file</label>
+        <input class="input-append-left" type="text" id="node-config-input-keyFile" />
     </div>
     <div class="form-tips">
       <p>To obtain these credentials, sign up to <a href="https://cloud.google.com/">Google Cloud Platform</a>, Then</p>
       <ul>
         <li>Go to IAM & Admin page and create a new service account with a new private key(JSON Key type)</li>
-        <li>Download a JSON file and copy the contents here</li>
+        <li>Download a JSON file and refer to the file in Key file parameter.</li>
     </div>
 </script>
 <script type="text/javascript">
@@ -112,15 +96,11 @@
         category: 'config',
         defaults: { },
         credentials: {
-            private_key_id: {type:"text",required:true},
-            private_key: {type: "password",required:true},
-            client_email: {type:"text",required:true},
-            client_id: {type:"text",required:true},
-            type: {type:"text",required:true},
+            keyFile: {type:"text",required:true},
             projectId: {type:"text",required:true},
         },
         label: function() {
-            return this.private_key_id ? "BigQuery "+this.private_key_id : "BigQuery";
+            return this.projectId ? "BigQuery "+this.projectId : "BigQuery";
         },
         exportable: false,
     });
